@@ -1,0 +1,215 @@
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <cstring>
+#include <cstdio>
+#include <conio.h>
+using namespace std;
+int bookAppointment()
+{
+    system("cls");
+    cout << "Book Your Appointment\n";
+    cout << "Available Slots\n";
+    ifstream read;
+    read.open("appointment.dat");
+    int hourbook = 8;
+    int arr[13] = {0};
+    int recordFound = 0;
+    if (read)
+    {
+        string line;
+        char key = 'A';
+        int i = 9;
+        while (getline(read, line))
+        {
+            char temp = line[0];
+            int index = (temp - 65);
+            arr[index] = 1;
+        }
+        if (recordFound == 1)
+        {
+            cout << "\n Appointment Summary by Hours\n ";
+            char key = 'A';
+            int hours = 9;
+            for (int i = 0; i <= 12; i++)
+            {
+                if (i == 0)
+                {
+                    if (arr[i] == 0)
+                        cout << "\n " << key << "-> 0" << hours << " - Available";
+                    else
+                        cout << "\n"
+                             << key << "-> 0" << hours << " - Booked";
+                }
+                else
+                {
+                    if (arr[i] == 0)
+                        cout << "\n " << key << "-> " << hours << " - Available";
+                    else
+                        cout << "\n"
+                             << key << "-> " << hours << " - Booked";
+                }
+                hours++;
+                key++;
+            }
+        }
+        read.close();
+    }
+    if (recordFound == 0)
+    {
+        cout << "\n Appointment Available for following hours: ";
+        char key = 'A';
+        for (int i = 9; i <= 12; i++)
+        {
+            if (i == 9)
+                cout << "\n"
+                     << key << "-> 0" << i << " - Available";
+            else
+                cout << "\n"
+                     << key << "-> " << i << " - Booked";
+            key++;
+        }
+    }
+    char choice;
+    cout << "\n\n Input your choice: ";
+    cin >> choice;
+    if (!(choice >= 'A' && choice <= 'Z'))
+    {
+        cout << "\n Error : Invalid Section";
+        cout << "\n Please select correct value from the menu";
+        cout << "\n Press nay key to continue";
+        getchar();
+        system("cls");
+        bookAppointment();
+    }
+    int index = (choice - 65);
+    int isBooked = 1;
+    if (arr[index] == 0)
+        isBooked = 0;
+    if (isBooked == 1)
+    {
+        cout << "\n Error : Appointment is already booked for this Hour";
+        cout << "\n Please select different time";
+        cout << "\n Press any key to continue";
+        bookAppointment();
+    }
+    string name;
+    cout << "\n Enter your first name";
+    cin >> name;
+    ofstream out;
+    out.open("appointment.dat", ios::app);
+    if (out)
+    {
+        cout << choice << " : " << name.c_str() << "\n";
+        out.close();
+        cout << "\n appointment booked for hours: " << (choice - 65) + 9 << " successfully!";
+    }
+    else
+    {
+        cout << "\n Error while saving booking";
+    }
+    cout << "\n Please enter any key to continue...";
+    getchar();
+    getchar();
+    return 0;
+}
+int existingAppointment()
+{
+    system("cls");
+    cout << "\n =======Appointment Summary=======";
+    ifstream read;
+    read.open("appointemnt.dat");
+    int hoursbook = 8;
+    int arr[13] = {0};
+    int recordFound = 0;
+    if (read)
+    {
+        string line;
+        char key = 'A';
+        int i = 9;
+        while (getline(read, line))
+        {
+            char temp = line[0];
+            int index = (temp - 65);
+            arr[index] = 1;
+            recordFound = 1;
+        }
+        if (recordFound == 1)
+        {
+            cout << "\n appointment Summary by Hours: ";
+            char key;
+            int hours;
+            for (int i = 0; i <= 12; i++)
+            {
+                if (arr[i] == 0)
+                    cout << "\n " << key << " -> " << hours << " - Available";
+                else
+                    cout << "\n " << key << " -> " << hours << " - Booked";
+                hours++;
+                key++;
+            }
+        }
+        read.close();
+    }
+    else
+    {
+        char key = 'A';
+        for (int i = 9; i <= 21; i++)
+        {
+            if (i == 9)
+                cout << "\n " << key << " -> 0 " << i << " - Available";
+            else
+                cout << " \n " << key << " -> " << i << " - Available";
+            key++;
+        }
+    }
+    cout << "\n Please enter any key to continue...";
+    getchar();
+    getchar();
+    return 0;
+}
+int main(int argc, char **argv)
+{
+    while (1)
+    {
+        system("cls");
+        cout << "\t\t Doctor Appointment System";
+        cout << "\n===============================\n";
+        cout << "1. Book an appointment\n";
+        cout << "2. Check Existing Appointment\n";
+        cout << "0. Exit\n";
+        int choice;
+        cin >> choice;
+        switch (choice)
+        {
+        case 1:
+            bookAppointment();
+            break;
+        case 2:
+            existingAppointment();
+            break;
+        case 0:
+            while (1)
+            {
+                system("cls");
+                cout << "\nAre you sure, you want to exit?(y/n)";
+                char ex;
+                cin >> ex;
+                if (ex == 'y' || ex == 'Y')
+                    exit(0);
+                else if (ex == 'n' || ex == 'N')
+                    break;
+                else
+                {
+                    cout << "\nInvalid input\n";
+                    getch();
+                }
+            }
+            break;
+        default:
+            cout << "Please enter a valid input";
+            getch();
+        }
+    }
+    return 0;
+}
